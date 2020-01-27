@@ -123,11 +123,12 @@ public class LinearArray {
     // Shifts all the elements of the source array to the left by 'k' positions
     // Returns the updated array
     public static int[] shiftLeft(int[] source, int k) {
-        for (int i = 0; i < source.length - k; i++) {
-            source[i] = source[i + k];
-            source[i + k] = 0;
-        }
-//        for (int j = 0; j < k; j++) {
+//        for (int i = 0; i < source.length - k; i++) {            //method 1
+//            source[i] = source[i + k];
+//            source[i + k] = 0;
+//        }
+
+//        for (int j = 0; j < k; j++) {                        //method 2
 //            for (int i = 1; i < source.length; i++) {
 //                if (i < source.length - 1) {
 //                    source[i - 1] = source[i];
@@ -137,6 +138,14 @@ public class LinearArray {
 //                }
 //            }
 //        }
+        for (int i = 1; i < source.length; i++) {       //method  3
+            if (i - k >= 0) {
+                source[i - k] = source[i];
+                source[i] = 0;
+            } else {
+                source[i] = 0;
+            }
+        }
         return source; // remove this line    
     }
 
@@ -150,17 +159,26 @@ public class LinearArray {
 //        }
 //        return source;
 //    }
-            for (int j = 0; j < k; j++) {
-                for (int i = source.length-1; i >0 ; i--) {
-                        source[i] = source[i-1];
-                        source[i-1]=0;
-                }
+
+//        for (int j = 0; j < k; j++) {
+//            for (int i = source.length - 1; i > 0; i--) {
+//                source[i] = source[i - 1];
+//                source[i - 1] = 0;
+//            }
+//        }
+        for (int i = source.length - 1; i > -1; i--) {         //method 3
+            if (i + k >= source.length) {
+                source[i] = 0;
+            } else {
+                source[i + k] = source[i];
+                source[i] = 0;
             }
-            return source; // remove this line    
         }
+        return source; // remove this line    
+    }
 
     // Rotates all the elements of the source array to the left by 'k' positions
-    // Returns the updated array
+// Returns the updated array
     public static int[] rotateLeft(int[] source, int k) {
         System.out.println();
         int[] copy = copyArray(source, source.length);
@@ -201,29 +219,30 @@ public class LinearArray {
      */
     public static boolean insert(int[] arr, int size, int elem, int index) {
         System.out.println();
-        int ind = 0;
         boolean flag = false;
-        if (index > size) {
+        if (index > arr.length) {
             System.out.println("Invalid Index");
             return flag;
         }
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == 0) {
-                flag = true;
-                ind = i;
-                break;
-            }
-        }
-        if (flag == false) {
+        if (size == arr.length) {
             System.out.println("No Space Left");
+            return flag;
         } else {
+            flag = true;
             int a[] = copyArray(arr, arr.length);
             a = shiftRight(a, 1);
-            for(int i=0;i<arr.length-index;i++){
-                arr[index+i]=a[index+i];
+            for (int i = index; i < arr.length - 1; i++) {
+                arr[i] = a[i];
             }
+            arr[index] = elem;
         }
-        arr[index] = elem;
+//        for (int i = 0; i < arr.length; i++) {
+//            if (arr[i] == 0) {
+//                flag = true;
+//                ind = i;
+//                break;
+//            }
+//        }
         return flag;// remove this line    
     }
 
@@ -238,14 +257,16 @@ public class LinearArray {
      */
     public static boolean removeAll(int[] arr, int size, int elem) {
         boolean flag = false;
+        int c = 0;
+        int a[] = copyArray(arr, arr.length);
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == elem) {
-                if (i + 1 < arr.length) {
-                    arr[i] = arr[i + 1];
-                    arr[i+1]=0;
-                    flag = true;
-                    break;
+                c++;
+                a = shiftLeft(a, 1);
+                for (int j = i; j < arr.length; j++) {
+                    arr[j] = a[j];
                 }
+                flag = true;
             }
         }
         return flag; // remove this line    
